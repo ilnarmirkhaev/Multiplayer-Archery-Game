@@ -1,11 +1,12 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
-namespace CodeBase
+namespace CodeBase.Player
 {
     [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : NetworkBehaviour, IInputHandler
     {
         public CharacterController controller;
         public PlayerControls controls;
@@ -31,6 +32,11 @@ namespace CodeBase
 
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (!IsOwner) this.enabled = false;
         }
 
         private void Start() =>
@@ -115,7 +121,7 @@ namespace CodeBase
             return rotatedToCameraSpace;
         }
 
-        private void SubscribeToInput()
+        public void SubscribeToInput()
         {
             controls.moveAction.started += OnMovementInput;
             controls.moveAction.performed += OnMovementInput;
@@ -127,7 +133,7 @@ namespace CodeBase
             controls.jumpAction.performed += Jump;
         }
 
-        private void UnsubscribeFromInput()
+        public void UnsubscribeFromInput()
         {
             controls.moveAction.started += OnMovementInput;
             controls.moveAction.performed += OnMovementInput;

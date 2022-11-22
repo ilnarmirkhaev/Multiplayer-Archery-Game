@@ -1,32 +1,41 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeBase
 {
-    [RequireComponent(typeof(Rigidbody), typeof(Collider))]
-    public class Arrow : MonoBehaviour
+    [RequireComponent(typeof(Rigidbody))]
+    public class Arrow : NetworkBehaviour
     {
-        public Rigidbody rigidbody;
-        [SerializeField] private Collider arrowCollider;
+        [SerializeField] private new Rigidbody rigidbody;
         [SerializeField] private Transform tip;
         [SerializeField] private TrailRenderer arrowVFX;
+
+        private ulong _ownerClientId;
+        private float _force;
 
         private bool _didHit;
         private bool _inAir;
         private Vector3 _lastPosition;
-        private bool _isPrecise;
 
         private Vector3 _hitPositionOrigin;
         private Vector3 _hitDirection;
         private float _hitDistance;
+        private WaitForFixedUpdate _waitForFixedUpdate;
 
-        public void Initialize(CharacterController controller, bool isPrecise)
+        public void Initialize(ulong ownerClientId, float force)
         {
+            _ownerClientId = ownerClientId;
+            _force = force;
+
             SetPhysics(false);
-            IgnorePlayerCollider(controller);
             arrowVFX.enabled = false;
-            _isPrecise = isPrecise;
+            _waitForFixedUpdate = new WaitForFixedUpdate();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            // if (!IsServer) enabled = false;
         }
 
         private void FixedUpdate()
@@ -40,16 +49,14 @@ namespace CodeBase
                 Destroy(gameObject);
         }
 
-        public void Fire(float force)
+        public void Launch()
         {
-            Application.targetFrameRate = -1;
             _inAir = true;
             _lastPosition = tip.position;
 
-            arrowCollider.enabled = false;
             SetPhysics(true);
 
-            rigidbody.AddForce(transform.forward * force, ForceMode.Impulse);
+            rigidbody.AddForce(transform.forward * _force, ForceMode.Impulse);
             StartCoroutine(RotateWithVelocity());
             arrowVFX.enabled = true;
         }
@@ -61,36 +68,17 @@ namespace CodeBase
             rigidbody.interpolation = usePhysics ? RigidbodyInterpolation.Interpolate : RigidbodyInterpolation.None;
         }
 
-        private void IgnorePlayerCollider(Collider playerCollider) =>
-            Physics.IgnoreCollision(arrowCollider, playerCollider);
-
         private void CheckCollision()
         {
             if (!ArrowTrajectoryCast(out var hitInfo)) return;
             Stop();
             transform.position = hitInfo.point;
+            // transform.SetParent(hitInfo.transform);
             PhysicsDebug.DrawDebug(hitInfo.point, 0.1f, 2f);
-            transform.SetParent(hitInfo.transform);
         }
 
-        private bool ArrowTrajectoryCast(out RaycastHit hitInfo)
-        {
-            if (_isPrecise)
-                return Physics.Linecast(_lastPosition, tip.position, out hitInfo);
-            
-            Vector3 movementStep = tip.position - _lastPosition;
-            var didHit = Physics.SphereCast(_lastPosition, 0.1f, movementStep, out hitInfo, movementStep.magnitude);
-            _hitPositionOrigin = _lastPosition;
-            _hitDirection = movementStep.normalized;
-            _hitDistance = hitInfo.distance;
-            return didHit;
-        }
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(_hitPositionOrigin + _hitDirection * _hitDistance, 0.1f);
-        }
+        private bool ArrowTrajectoryCast(out RaycastHit hitInfo) =>
+            Physics.Linecast(_lastPosition, tip.position, out hitInfo, Layers.ArrowsMask);
 
         private void Stop()
         {
@@ -102,7 +90,7 @@ namespace CodeBase
 
         private IEnumerator RotateWithVelocity()
         {
-            yield return new WaitForFixedUpdate();
+            yield return _waitForFixedUpdate;
             while (_inAir)
             {
                 Quaternion newRotation = Quaternion.LookRotation(rigidbody.velocity, transform.up);
