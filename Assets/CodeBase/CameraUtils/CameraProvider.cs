@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace CodeBase
+namespace CodeBase.CameraUtils
 {
     public class CameraProvider : NetworkBehaviour
     {

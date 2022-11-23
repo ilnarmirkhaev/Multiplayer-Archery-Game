@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeBase.Player
+namespace CodeBase.Weapons
 {
     public interface IWeapon
     {

@@ -1,4 +1,5 @@
-﻿using Unity.Netcode;
+﻿using CodeBase.Weapons;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeBase

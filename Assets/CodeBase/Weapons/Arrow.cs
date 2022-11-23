@@ -2,7 +2,7 @@
 using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeBase
+namespace CodeBase.Weapons
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Arrow : NetworkBehaviour
