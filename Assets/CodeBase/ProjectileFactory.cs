@@ -1,36 +1,67 @@
-﻿using CodeBase.Player;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 namespace CodeBase
 {
-    public class ProjectileFactory
+    public class ProjectileFactory : NetworkBehaviour
     {
-        private readonly Arrow _arrowPrefab;
+        private static ProjectileFactory _instance;
 
-        public ProjectileFactory(Arrow arrowPrefab)
+        public static ProjectileFactory Singleton => _instance;
+
+        [SerializeField] private Arrow arrowPrefab;
+
+        private bool _isInitialized;
+
+        public void Awake()
         {
-            _arrowPrefab = arrowPrefab;
+            if (_instance != null && _instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                _instance = this;
+            }
         }
 
-        public Arrow CreateArrow(ulong ownerClientId, Vector3 position, Vector3 direction, float force)
+        public override void OnNetworkSpawn()
         {
-            var arrow = Object.Instantiate(_arrowPrefab, position, Quaternion.LookRotation(direction));
-            arrow.Initialize(ownerClientId, force);
-            return arrow;
+            InitializePool();
         }
 
-        [ServerRpc]
-        public void FireServerRpc(ulong ownerId, Vector3 position, Vector3 direction, float power)
+        public void FireLocallyAndSendRpc(Vector3 position, Vector3 direction, float power)
         {
-            FireClientRpc(ownerId, position, direction, power);
+            // CreateArrow(ownerId, position, direction, power).Launch();
+            FireServerRpc(position, direction, power);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        private void FireServerRpc(Vector3 position, Vector3 direction, float power, ServerRpcParams serverRpcParams = default)
+        {
+            FireClientRpc(serverRpcParams.Receive.SenderClientId, position, direction, power);
         }
 
         [ClientRpc]
-        private void FireClientRpc(ulong ownerId, Vector3 position, Vector3 direction, float power)
+        private void FireClientRpc(ulong senderId, Vector3 position, Vector3 direction, float power)
         {
-            Arrow arrow = CreateArrow(ownerId, position, direction, power);
-            arrow.Launch();
+            // if (NetworkManager.Singleton.LocalClientId == senderId) return;
+            Debug.Log($"Local: {NetworkManager.LocalClientId}, owner: {senderId}");
+
+            CreateArrow(senderId, position, direction, power).Launch();
+        }
+
+        private Arrow CreateArrow(ulong senderId, Vector3 position, Vector3 direction, float force)
+        {
+            var arrow = Instantiate(arrowPrefab, position, Quaternion.LookRotation(direction));
+            arrow.Initialize(senderId, force);
+            return arrow;
+        }
+
+        private void InitializePool()
+        {
+            if (_isInitialized) return;
+            _isInitialized = true;
         }
     }
 }
