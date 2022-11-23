@@ -1,11 +1,10 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using static UnityEngine.InputSystem.InputAction;
 
 namespace CodeBase.Player
 {
-    [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
+    [RequireComponent(typeof(CharacterController))]
     public class PlayerController : NetworkBehaviour, IInputHandler
     {
         public CharacterController controller;
@@ -36,7 +35,12 @@ namespace CodeBase.Player
 
         public override void OnNetworkSpawn()
         {
-            if (!IsOwner) this.enabled = false;
+            if (!IsOwner)
+            {
+                this.enabled = false;
+                controls.enabled = false;
+                controls.playerInput.enabled = false;
+            }
         }
 
         private void Start() =>
