@@ -8,7 +8,6 @@ namespace CodeBase.Player
     {
         public PlayerControls controls;
 
-        [SerializeField] private Arrow arrowPrefab;
         [SerializeField] private Transform shootingPoint;
 
         [SerializeField] private float firePower = 100f;
@@ -18,7 +17,6 @@ namespace CodeBase.Player
         private Camera _camera;
 
         private IChargeableWeapon _bow;
-        private ProjectileFactory _factory;
 
         public override void OnNetworkSpawn()
         {
@@ -26,11 +24,8 @@ namespace CodeBase.Player
 
             _camera = Camera.main;
 
-            _factory = new ProjectileFactory(arrowPrefab);
-
-            _bow = new Bow(_factory, OwnerClientId, firePower);
+            _bow = new Bow(firePower);
             _bow.Discharge();
-
 
             SubscribeToInput();
         }

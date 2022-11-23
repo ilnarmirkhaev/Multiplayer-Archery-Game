@@ -15,14 +15,10 @@ namespace CodeBase.Player
         private bool _isCharging;
         private float _currentCharge = MinCharge;
 
-        private readonly ProjectileFactory _factory;
-        private readonly ulong _ownerClientId;
         private readonly float _firePower;
 
-        public Bow(ProjectileFactory factory, ulong ownerClientId, float firePower)
+        public Bow(float firePower)
         {
-            _factory = factory;
-            _ownerClientId = ownerClientId;
             _firePower = firePower;
         }
 
@@ -40,10 +36,14 @@ namespace CodeBase.Player
 
         public void Fire(Vector3 from, Vector3 direction)
         {
-            if (_isReloading) return;
+            if (_isReloading)
+            {
+                if (_isCharging) Discharge();
+                return;
+            }
 
             Debug.Log($"Fire power: {_currentCharge}");
-            _factory.FireServerRpc(_ownerClientId, from, direction, Power);
+            ProjectileFactory.Singleton.FireLocallyAndSendRpc(from, direction, Power);
 
             Discharge();
             Reload();
@@ -60,14 +60,6 @@ namespace CodeBase.Player
             _isReloading = true;
             await Task.Delay((int)(ReloadTime * 1000));
             _isReloading = false;
-        }
-
-        private void FireLocalAndServer(ulong localClientId, Vector3 shootingPosition, Vector3 direction, float power)
-        {
-            Arrow arrow = _factory.CreateArrow(localClientId, shootingPosition, direction, power);
-            arrow.Launch();
-
-            _factory.FireServerRpc(localClientId, shootingPosition, direction, power);
         }
     }
 }
