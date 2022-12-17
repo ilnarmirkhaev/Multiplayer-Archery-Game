@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using CodeBase.Player;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -7,11 +8,12 @@ namespace CodeBase.Weapons
     [RequireComponent(typeof(Rigidbody))]
     public class Arrow : NetworkBehaviour
     {
+        public NetworkObject networkObject;
         [SerializeField] private new Rigidbody rigidbody;
         [SerializeField] private Transform tip;
         [SerializeField] private TrailRenderer arrowVFX;
 
-        private ulong _ownerClientId;
+        private ulong _senderId;
         private float _force;
 
         private bool _didHit;
@@ -23,9 +25,9 @@ namespace CodeBase.Weapons
         private float _hitDistance;
         private WaitForFixedUpdate _waitForFixedUpdate;
 
-        public void Initialize(ulong ownerClientId, float force)
+        public void Initialize(ulong senderId, float force)
         {
-            _ownerClientId = ownerClientId;
+            _senderId = senderId;
             _force = force;
 
             SetPhysics(false);
@@ -35,7 +37,7 @@ namespace CodeBase.Weapons
 
         public override void OnNetworkSpawn()
         {
-            // if (!IsServer) enabled = false;
+            if (!IsServer) enabled = false;
         }
 
         private void FixedUpdate()
@@ -71,6 +73,17 @@ namespace CodeBase.Weapons
         private void CheckCollision()
         {
             if (!ArrowTrajectoryCast(out var hitInfo)) return;
+
+            var collidedGameObject = hitInfo.transform.gameObject;
+
+            if (collidedGameObject.layer == Layers.PlayersLayer)
+            {
+                var playerHealth = collidedGameObject.GetComponent<NetworkHealth>();
+                if (HitObjectIsSender(playerHealth)) return;
+
+                playerHealth.HitPoints.Value -= (int)_force;
+            }
+
             Stop();
             transform.position = hitInfo.point;
             // transform.SetParent(hitInfo.transform);
@@ -79,6 +92,9 @@ namespace CodeBase.Weapons
 
         private bool ArrowTrajectoryCast(out RaycastHit hitInfo) =>
             Physics.Linecast(_lastPosition, tip.position, out hitInfo, Layers.ArrowsMask);
+
+        private bool HitObjectIsSender(NetworkBehaviour networkBehaviour) =>
+            _senderId == networkBehaviour.OwnerClientId;
 
         private void Stop()
         {

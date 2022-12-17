@@ -43,7 +43,7 @@ namespace CodeBase.Weapons
             }
 
             Debug.Log($"Fire power: {_currentCharge}");
-            ProjectileFactory.Singleton.FireLocallyAndSendRpc(from, direction, Power);
+            ProjectileFactory.Instance.FireServerRpc(from, direction, Power);
 
             Discharge();
             Reload();

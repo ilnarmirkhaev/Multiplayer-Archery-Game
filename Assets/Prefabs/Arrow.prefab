@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86a599a047f84f20b35e14060ac77ebc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkObject: {fileID: 7235797910600221639}
   rigidbody: {fileID: 3629191671890019662}
   tip: {fileID: 5523013799067217842}
   arrowVFX: {fileID: 8682368036817075874}
