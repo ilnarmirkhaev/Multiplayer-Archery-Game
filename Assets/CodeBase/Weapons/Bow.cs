@@ -42,7 +42,7 @@ namespace CodeBase.Weapons
                 return;
             }
 
-            Debug.Log($"Fire power: {_currentCharge}");
+            Core.Logger.Instance.LogInfo($"Fire power: {_currentCharge}");
             ProjectileFactory.Instance.FireServerRpc(from, direction, Power);
 
             Discharge();

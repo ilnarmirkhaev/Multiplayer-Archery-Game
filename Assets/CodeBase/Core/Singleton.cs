@@ -1,9 +1,8 @@
-﻿using Unity.Netcode;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace CodeBase.Network
+namespace CodeBase.Core
 {
-    public class NetworkSingleton<T> : NetworkBehaviour where T : Component
+    public class Singleton<T> : MonoBehaviour where T : Component
     {
         private static T _instance;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using Unity.Netcode;
 using UnityEngine;
+using Logger = CodeBase.Core.Logger;
 
 namespace CodeBase.Player
 {
@@ -23,7 +24,8 @@ namespace CodeBase.Player
 
         private void HitPointsChanged(int previousValue, int newValue)
         {
-            Debug.Log("Health changed");
+            Logger.Instance.LogInfo("Health changed");
+            
             if (previousValue > 0 && newValue <= 0)
             {
                 HitPointsDepleted?.Invoke();
