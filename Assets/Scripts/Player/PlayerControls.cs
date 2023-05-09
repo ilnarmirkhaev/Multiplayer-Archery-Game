@@ -7,18 +7,23 @@ namespace Player
     {
         public PlayerInput playerInput;
 
-        [HideInInspector] public InputAction moveAction;
-        [HideInInspector] public InputAction runAction;
-        [HideInInspector] public InputAction jumpAction;
-        [HideInInspector] public InputAction fireAction;
-        [HideInInspector] public InputAction aimAction;
+        public InputAction MoveAction { get; private set; }
+        public InputAction RunAction { get; private set; }
+        public InputAction JumpAction { get; private set; }
+        public InputAction FireAction { get; private set; }
+        public InputAction AimAction { get; private set; }
+
+        private const string Move = "Move";
+        private const string Run = "Run";
+        private const string Jump = "Jump";
+        private const string Fire = "Fire";
 
         private void Awake()
         {
-            moveAction = playerInput.actions["Move"];
-            runAction = playerInput.actions["Run"];
-            jumpAction = playerInput.actions["Jump"];
-            fireAction = playerInput.actions["Fire"];
+            MoveAction = playerInput.actions[Move];
+            RunAction = playerInput.actions[Run];
+            JumpAction = playerInput.actions[Jump];
+            FireAction = playerInput.actions[Fire];
         }
     }
 }

@@ -127,26 +127,26 @@ namespace Player
 
         public void SubscribeToInput()
         {
-            controls.moveAction.started += OnMovementInput;
-            controls.moveAction.performed += OnMovementInput;
-            controls.moveAction.canceled += OnMovementInput;
+            controls.MoveAction.started += OnMovementInput;
+            controls.MoveAction.performed += OnMovementInput;
+            controls.MoveAction.canceled += OnMovementInput;
 
-            controls.runAction.started += OnRunPressed;
-            controls.runAction.canceled += OnRunPressed;
+            controls.RunAction.started += OnRunPressed;
+            controls.RunAction.canceled += OnRunPressed;
 
-            controls.jumpAction.performed += Jump;
+            controls.JumpAction.performed += Jump;
         }
 
         public void UnsubscribeFromInput()
         {
-            controls.moveAction.started += OnMovementInput;
-            controls.moveAction.performed += OnMovementInput;
-            controls.moveAction.canceled += OnMovementInput;
+            controls.MoveAction.started += OnMovementInput;
+            controls.MoveAction.performed += OnMovementInput;
+            controls.MoveAction.canceled += OnMovementInput;
 
-            controls.runAction.started += OnRunPressed;
-            controls.runAction.canceled += OnRunPressed;
+            controls.RunAction.started += OnRunPressed;
+            controls.RunAction.canceled += OnRunPressed;
 
-            controls.jumpAction.performed += Jump;
+            controls.JumpAction.performed += Jump;
         }
     }
 }

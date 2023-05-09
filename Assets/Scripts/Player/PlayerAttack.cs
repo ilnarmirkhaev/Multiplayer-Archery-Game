@@ -33,8 +33,8 @@ namespace Player
 
         public void SubscribeToInput()
         {
-            controls.fireAction.started += OnFireActionStarted;
-            controls.fireAction.canceled += OnFireActionCanceled;
+            controls.FireAction.started += OnFireActionStarted;
+            controls.FireAction.canceled += OnFireActionCanceled;
         }
 
         private void OnDisable() =>
@@ -42,8 +42,8 @@ namespace Player
 
         public void UnsubscribeFromInput()
         {
-            controls.fireAction.started -= OnFireActionStarted;
-            controls.fireAction.canceled -= OnFireActionCanceled;
+            controls.FireAction.started -= OnFireActionStarted;
+            controls.FireAction.canceled -= OnFireActionCanceled;
         }
 
         private void OnFireActionStarted(CallbackContext _) =>
