@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using UnityEngine;
 
-namespace CodeBase.Weapons
+namespace Weapons
 {
     public class Bow : IChargeableWeapon
     {

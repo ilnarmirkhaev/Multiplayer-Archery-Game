@@ -1,9 +1,9 @@
 ﻿using System.Collections;
-using CodeBase.Player;
+using Player;
 using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeBase.Weapons
+namespace Weapons
 {
     [RequireComponent(typeof(Rigidbody))]
     public class Arrow : NetworkBehaviour

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeBase.Weapons
+namespace Weapons
 {
     public interface IWeapon
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using Unity.Netcode;
 using UnityEngine;
-using Logger = CodeBase.Core.Logger;
+using Logger = Core.Logger;
 
-namespace CodeBase.Player
+namespace Player
 {
     public class NetworkHealth : NetworkBehaviour
     {

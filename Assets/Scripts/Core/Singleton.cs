@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CodeBase.Core
+namespace Core
 {
     public class Singleton<T> : MonoBehaviour where T : Component
     {

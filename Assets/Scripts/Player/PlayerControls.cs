@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace CodeBase.Player
+namespace Player
 {
     public class PlayerControls : MonoBehaviour
     {

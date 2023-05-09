@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeBase.Network
+namespace Network
 {
     public class NetworkButtons : MonoBehaviour
     {

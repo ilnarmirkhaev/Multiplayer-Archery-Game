@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeBase.Player
+namespace Player
 {
     public struct PlayerNetworkData : INetworkSerializable
     {

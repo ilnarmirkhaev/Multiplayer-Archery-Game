@@ -1,9 +1,9 @@
-﻿using CodeBase.Weapons;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
+using Weapons;
 using static UnityEngine.InputSystem.InputAction;
 
-namespace CodeBase.Player
+namespace Player
 {
     public class PlayerAttack : NetworkBehaviour, IInputHandler
     {

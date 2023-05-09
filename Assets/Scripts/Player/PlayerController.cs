@@ -2,7 +2,7 @@
 using UnityEngine;
 using static UnityEngine.InputSystem.InputAction;
 
-namespace CodeBase.Player
+namespace Player
 {
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : NetworkBehaviour, IInputHandler

@@ -1,4 +1,4 @@
-﻿namespace CodeBase.Player
+﻿namespace Player
 {
     public interface IInputHandler
     {

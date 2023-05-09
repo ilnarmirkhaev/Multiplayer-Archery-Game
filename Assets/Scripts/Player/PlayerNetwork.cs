@@ -3,7 +3,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace CodeBase.Player
+namespace Player
 {
     public class PlayerNetwork : NetworkBehaviour
     {

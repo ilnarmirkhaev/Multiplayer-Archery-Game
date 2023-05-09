@@ -3,7 +3,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-namespace CodeBase.Core
+namespace Core
 {
     public class Logger : Singleton<Logger>
     {

@@ -1,7 +1,7 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 
-namespace CodeBase.Core
+namespace Core
 {
     public class NetworkSingleton<T> : NetworkBehaviour where T : Component
     {
