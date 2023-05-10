@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace Player
 {
+    [RequireComponent(typeof(PlayerInput))]
     public class PlayerControls : MonoBehaviour
     {
         public PlayerInput playerInput;

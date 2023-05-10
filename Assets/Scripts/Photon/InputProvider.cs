@@ -26,11 +26,9 @@ namespace Photon
                 data.direction += new Vector3(value.x, 0, value.y);
             }
 
-            if (controls.FireAction.triggered)
-            {
-                data.fired = true;
-            }
-            
+            if (controls.FireAction.triggered) data.fired = true;
+            if (controls.JumpAction.triggered) data.jumped = true;
+
             input.Set(data);
         }
 

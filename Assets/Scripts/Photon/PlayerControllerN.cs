@@ -10,7 +10,12 @@ namespace Photon
         
         public override void FixedUpdateNetwork()
         {
-            // if (GetInput(out NetworkInputData))
+            if (!GetInput(out NetworkInputData data)) return;
+            
+            data.direction.Normalize();
+            controller.Move(5 * data.direction * Runner.DeltaTime);
+            
+            if (data.fired) Debug.Log("Fire!");
         }
     }
 }
