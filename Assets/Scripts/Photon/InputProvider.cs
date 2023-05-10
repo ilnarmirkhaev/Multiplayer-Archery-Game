@@ -7,20 +7,36 @@ using UnityEngine;
 
 namespace Photon
 {
-    public class RunnerCallbacks : MonoBehaviour, INetworkRunnerCallbacks
+    [RequireComponent(typeof(PlayerControls))]
+    public class InputProvider : SimulationBehaviour, INetworkRunnerCallbacks
     {
         [SerializeField] private PlayerControls controls;
-        
-        public void SubscribeToInput()
+
+        private void OnEnable()
         {
-            // controls.MoveAction.started += OnMovementInput;
-            // controls.MoveAction.performed += OnMovementInput;
-            // controls.MoveAction.canceled += OnMovementInput;
-            //
-            // controls.RunAction.started += OnRunPressed;
-            // controls.RunAction.canceled += OnRunPressed;
-            //
-            // controls.JumpAction.performed += Jump;
+            if (Runner != null) Runner.AddCallbacks(this);
+        }
+
+        public void OnInput(NetworkRunner runner, NetworkInput input)
+        {
+            var data = new NetworkInputData();
+            if (controls.MoveAction.inProgress)
+            {
+                var value = controls.MoveAction.ReadValue<Vector2>();
+                data.direction += new Vector3(value.x, 0, value.y);
+            }
+
+            if (controls.FireAction.triggered)
+            {
+                data.fired = true;
+            }
+            
+            input.Set(data);
+        }
+
+        private void OnDisable()
+        {
+            if (Runner != null) Runner.RemoveCallbacks(this);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
@@ -30,15 +46,6 @@ namespace Photon
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
         {
-        }
-
-        public void OnInput(NetworkRunner runner, NetworkInput input)
-        {
-            var data = new NetworkInputData();
-            if (controls.MoveAction.inProgress)
-            {
-                // data.direction += controls.MoveAction.ReadValue<Vector2>();
-            }
         }
 
         public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
