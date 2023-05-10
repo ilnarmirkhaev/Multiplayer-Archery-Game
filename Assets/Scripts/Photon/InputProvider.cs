@@ -13,8 +13,12 @@ namespace Photon
         [SerializeField] private PlayerControls controls;
 
         private void OnEnable()
-        {
-            if (Runner != null) Runner.AddCallbacks(this);
+        {	
+            Debug.Log("DADADADA");
+            if (Runner == null) return;
+			
+            Debug.Log("DADADADA");
+			Runner.AddCallbacks(this);
         }
 
         public void OnInput(NetworkRunner runner, NetworkInput input)
