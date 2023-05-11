@@ -35,11 +35,11 @@ namespace Photon
         public override void FixedUpdateNetwork()
         {
             if (!GetInput(out NetworkInputData data)) return;
-
-            var wasd = data.direction.normalized;
-            var direction = _transform.TransformDirection(wasd);
-
-            controller.Move(direction * (5 * Runner.DeltaTime));
+            
+            var moveDirection = _transform.TransformDirection(data.direction.normalized);
+            controller.Move(moveDirection);
+            controller.RotateY(data.lookDelta.x);
+            if (data.jumped) controller.Jump();
 
             if (data.holdingFire) Debug.Log("Fire!");
         }

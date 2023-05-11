@@ -17,6 +17,7 @@ namespace Photon
             var data = new NetworkInputData();
             
             data.direction += controls.GetPlayerMovement().ToDirectionVector3();
+            data.lookDelta += controls.GetRotationDelta();
             data.isRunning = controls.IsHoldingRun();
             data.holdingFire = controls.IsHoldingFire();
             data.jumped = controls.JumpedThisFrame();

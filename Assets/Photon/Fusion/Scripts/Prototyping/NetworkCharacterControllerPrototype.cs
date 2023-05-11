@@ -115,4 +115,11 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
     Velocity   = (transform.position - previousPos) * Runner.Simulation.Config.TickRate;
     IsGrounded = Controller.isGrounded;
   }
+
+  public void RotateY(float angle)
+  {
+    // var rotation = Quaternion.AngleAxis(angle, transform.up);
+    // transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Runner.DeltaTime);
+    transform.Rotate(transform.up, angle * rotationSpeed * Runner.DeltaTime);
+  }
 }
