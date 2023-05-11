@@ -12,33 +12,16 @@ namespace Photon
     {
         [SerializeField] private PlayerControls controls;
 
-        private void OnEnable()
-        {	
-            Debug.Log("DADADADA");
-            if (Runner == null) return;
-			
-            Debug.Log("DADADADA");
-			Runner.AddCallbacks(this);
-        }
-
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
             var data = new NetworkInputData();
-            if (controls.MoveAction.inProgress)
-            {
-                var value = controls.MoveAction.ReadValue<Vector2>();
-                data.direction += new Vector3(value.x, 0, value.y);
-            }
-
-            if (controls.FireAction.triggered) data.fired = true;
-            if (controls.JumpAction.triggered) data.jumped = true;
+            
+            data.direction += controls.GetPlayerMovement().ToDirectionVector3();
+            data.isRunning = controls.IsHoldingRun();
+            data.holdingFire = controls.IsHoldingFire();
+            data.jumped = controls.JumpedThisFrame();
 
             input.Set(data);
-        }
-
-        private void OnDisable()
-        {
-            if (Runner != null) Runner.RemoveCallbacks(this);
         }
 
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
