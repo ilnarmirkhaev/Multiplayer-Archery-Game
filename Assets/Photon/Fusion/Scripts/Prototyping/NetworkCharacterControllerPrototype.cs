@@ -118,8 +118,9 @@ public class NetworkCharacterControllerPrototype : NetworkTransform {
 
   public void RotateY(float angle)
   {
-    // var rotation = Quaternion.AngleAxis(angle, transform.up);
-    // transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Runner.DeltaTime);
-    transform.Rotate(transform.up, angle * rotationSpeed * Runner.DeltaTime);
+    var from = transform.rotation;
+    var to = from.eulerAngles;
+    to.y += angle;
+    transform.rotation = Quaternion.Slerp(from, Quaternion.Euler(to), rotationSpeed * Runner.DeltaTime);
   }
 }
