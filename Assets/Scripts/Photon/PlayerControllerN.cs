@@ -13,6 +13,8 @@ namespace Photon
 
         private CinemachineVirtualCamera _playerCamera;
         private Transform _transform;
+        private float _rotationSpeed;
+        private Quaternion _zeroRotation;
 
         public static event Action<SimulationBehaviour> PlayerSpawned;
 
@@ -30,6 +32,8 @@ namespace Photon
             
             PlayerSpawned?.Invoke(this);
             _transform = transform;
+            _rotationSpeed = controller.rotationSpeed;
+            _zeroRotation = lookPoint.localRotation;
         }
 
         public override void FixedUpdateNetwork()
@@ -39,6 +43,12 @@ namespace Photon
             var moveDirection = _transform.TransformDirection(data.direction.normalized);
             controller.Move(moveDirection);
             controller.RotateY(data.lookDelta.x);
+
+            var from = lookPoint.localRotation;
+            var to = from * Quaternion.AngleAxis(-data.lookDelta.y, Vector3.right);
+            if (Quaternion.Angle(_zeroRotation, to) < 90f)
+                lookPoint.localRotation = Quaternion.Slerp(from, to, _rotationSpeed * Runner.DeltaTime);
+
             if (data.jumped) controller.Jump();
         }
 
