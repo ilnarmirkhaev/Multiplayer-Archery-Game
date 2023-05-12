@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using Fusion;
-using Player;
 using UnityEngine;
 
 namespace Photon
@@ -13,8 +12,7 @@ namespace Photon
         [SerializeField] private TrailRenderer arrowVFX;
 
         private Rigidbody _rigidbody;
-        
-        private ulong _senderId;
+
         private float _force;
 
         private bool _didHit;
@@ -24,16 +22,10 @@ namespace Photon
         private Vector3 _hitPositionOrigin;
         private Vector3 _hitDirection;
         private float _hitDistance;
-        private WaitForFixedUpdate _waitForFixedUpdate;
 
-        public void Initialize(ulong senderId, float force)
+        public void Initialize(float force)
         {
-            _senderId = senderId;
             _force = force;
-
-            SetPhysics(false);
-            arrowVFX.enabled = false;
-            _waitForFixedUpdate = new WaitForFixedUpdate();
         }
 
         public override void Spawned()
@@ -78,12 +70,9 @@ namespace Photon
 
             var collidedGameObject = hitInfo.transform.gameObject;
 
-            if (collidedGameObject.layer == Layers.PlayersLayer)
+            if (collidedGameObject.TryGetComponent<PlayerHealth>(out var health))
             {
-                var playerHealth = collidedGameObject.GetComponent<NetworkHealth>();
-                // if (HitObjectIsSender(playerHealth)) return;
-
-                playerHealth.HitPoints.Value -= (int)_force;
+                health.HitPoints -= (int)_force;
             }
 
             Stop();
@@ -108,7 +97,7 @@ namespace Photon
 
         private IEnumerator RotateWithVelocity()
         {
-            yield return _waitForFixedUpdate;
+            yield return new WaitForFixedUpdate();
             while (_inAir)
             {
                 Quaternion newRotation = Quaternion.LookRotation(_rigidbody.velocity, transform.up);

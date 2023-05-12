@@ -40,8 +40,6 @@ namespace Photon
             controller.Move(moveDirection);
             controller.RotateY(data.lookDelta.x);
             if (data.jumped) controller.Jump();
-
-            if (data.holdingFire) Debug.Log("Fire!");
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)

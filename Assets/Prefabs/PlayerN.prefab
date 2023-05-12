@@ -74,6 +74,7 @@ GameObject:
   - component: {fileID: 5568334825210662350}
   - component: {fileID: 4357805367424247693}
   - component: {fileID: -5588750193739703082}
+  - component: {fileID: 8271214943700599157}
   - component: {fileID: 6959789651107276706}
   - component: {fileID: 81359191433168922}
   m_Layer: 9
@@ -157,6 +158,22 @@ MonoBehaviour:
   _interpolationDataSource: 0
   controller: {fileID: 6959789651107276706}
   lookPoint: {fileID: 2918353732253736393}
+--- !u!114 &8271214943700599157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2765227200552441425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a575f21ac65b4634bbeae49c539a3ca0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  shootingPoint: {fileID: 2918353732253736393}
+  arrowPrefab: {fileID: 5079636210664030685, guid: 1196babef41691442b990b53bd6d4aa0, type: 3}
+  firePower: 100
 --- !u!114 &6959789651107276706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,7 +207,7 @@ MonoBehaviour:
   acceleration: 10
   braking: 10
   maxSpeed: 5
-  rotationSpeed: 300
+  rotationSpeed: 200
   _IsGrounded: 0
   _Velocity: {x: 0, y: 0, z: 0}
 --- !u!114 &81359191433168922
@@ -216,6 +233,7 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: -5588750193739703082}
+  - {fileID: 8271214943700599157}
   - {fileID: 6959789651107276706}
   SimulationBehaviours: []
 --- !u!1 &3505273599288387704
@@ -242,7 +260,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3505273599288387704}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.3, z: 0}
+  m_LocalPosition: {x: 0, y: 1.3, z: 0.258}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

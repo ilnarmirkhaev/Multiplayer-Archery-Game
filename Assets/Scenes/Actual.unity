@@ -246,7 +246,6 @@ GameObject:
   m_Component:
   - component: {fileID: 194950037}
   - component: {fileID: 194950036}
-  - component: {fileID: 194950035}
   m_Layer: 0
   m_Name: CM 1stPersonCamera
   m_TagString: Untagged
@@ -254,22 +253,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &194950035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 194950034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fb7194dc27b9df64c8beca7482ee8e0d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PlayerIndex: -1
-  AutoEnableInputs: 1
-  XYAxis: {fileID: -955135005846923440, guid: 25c76bdf90f7e074db1b678950e22803, type: 3}
-  ZAxis: {fileID: 0}
 --- !u!114 &194950036
 MonoBehaviour:
   m_ObjectHideFlags: 0
