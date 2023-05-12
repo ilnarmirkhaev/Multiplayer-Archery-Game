@@ -10,6 +10,8 @@ namespace Photon
         [SerializeField] private NetworkRigidbody networkRigidbody;
         [SerializeField] private Transform tip;
         [SerializeField] private TrailRenderer arrowVFX;
+        
+        [Networked] private TickTimer Life { get; set; }
 
         private Rigidbody _rigidbody;
 
@@ -36,13 +38,17 @@ namespace Photon
 
         public override void FixedUpdateNetwork()
         {
-            if (!_inAir) return;
+            if (!_inAir)
+            {
+                if (Life.Expired(Runner)) Runner.Despawn(Object);
+                return;
+            }
 
             CheckCollision();
             _lastPosition = tip.position;
 
             if (_lastPosition.y < -10)
-                Destroy(gameObject);
+                Runner.Despawn(Object);
         }
 
         public void Launch()
@@ -92,7 +98,7 @@ namespace Photon
             _inAir = false;
             SetPhysics(false);
 
-            StartCoroutine(DestroyAfterTime());
+            Life = TickTimer.CreateFromSeconds(Runner, 3f);
         }
 
         private IEnumerator RotateWithVelocity()
@@ -104,12 +110,6 @@ namespace Photon
                 transform.rotation = newRotation;
                 yield return null;
             }
-        }
-
-        private IEnumerator DestroyAfterTime()
-        {
-            yield return new WaitForSeconds(3f);
-            Destroy(gameObject);
         }
     }
 }
