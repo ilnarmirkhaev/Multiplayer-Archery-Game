@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Photon
 {
     [RequireComponent(typeof(PlayerControls))]
-    public class InputProvider : SimulationBehaviour, INetworkRunnerCallbacks
+    public class InputProvider : Fusion.Behaviour, INetworkRunnerCallbacks
     {
         [SerializeField] private PlayerControls controls;
 

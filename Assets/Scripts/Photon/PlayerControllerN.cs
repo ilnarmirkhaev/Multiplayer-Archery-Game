@@ -18,6 +18,8 @@ namespace Photon
 
         public static event Action<SimulationBehaviour> PlayerSpawned;
 
+        public Vector3 MovementDirection { get; set; }
+
         [Inject]
         private void Inject(CinemachineVirtualCamera playerCamera)
         {
@@ -28,9 +30,8 @@ namespace Photon
 
         public override void Spawned()
         {
-            if (!HasInputAuthority) return;
+            if (HasInputAuthority) PlayerSpawned?.Invoke(this);
             
-            PlayerSpawned?.Invoke(this);
             _transform = transform;
             _rotationSpeed = controller.rotationSpeed;
             _zeroRotation = lookPoint.localRotation;
@@ -38,18 +39,32 @@ namespace Photon
 
         public override void FixedUpdateNetwork()
         {
-            if (!GetInput(out NetworkInputData data)) return;
-            
-            var moveDirection = _transform.TransformDirection(data.direction.normalized);
-            controller.Move(moveDirection);
-            controller.RotateY(data.lookDelta.x);
-
+            Vector3 direction;
+            Quaternion lookRotation;
+            float angleX;
             var from = lookPoint.localRotation;
-            var to = from * Quaternion.AngleAxis(-data.lookDelta.y, Vector3.right);
-            if (Quaternion.Angle(_zeroRotation, to) < 90f)
-                lookPoint.localRotation = Quaternion.Slerp(from, to, _rotationSpeed * Runner.DeltaTime);
-
-            if (data.jumped) controller.Jump();
+            
+            if (GetInput(out NetworkInputData data))
+            {
+                direction = _transform.TransformDirection(data.direction).normalized;
+                MovementDirection = direction;
+                
+                angleX = data.lookDelta.x;
+                lookRotation = from * Quaternion.AngleAxis(-data.lookDelta.y, Vector3.right);
+                
+                if (data.jumped) controller.Jump();
+            }
+            else
+            {
+                direction = MovementDirection;
+                angleX = 0;
+                lookRotation = lookPoint.localRotation;
+            }
+            
+            controller.Move(direction);
+            controller.RotateY(angleX);
+            if (Quaternion.Angle(_zeroRotation, lookRotation) < 90f)
+                lookPoint.localRotation = Quaternion.Slerp(from, lookRotation, _rotationSpeed * Runner.DeltaTime);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
