@@ -13,12 +13,12 @@ namespace Photon
 
         private CinemachineVirtualCamera _playerCamera;
         private Transform _transform;
-        private float _rotationSpeed;
         private Quaternion _zeroRotation;
 
         public static event Action<SimulationBehaviour> PlayerSpawned;
 
         public Vector3 MovementDirection { get; set; }
+        public Quaternion LookRotation { get; set; }
 
         [Inject]
         private void Inject(CinemachineVirtualCamera playerCamera)
@@ -26,6 +26,9 @@ namespace Photon
             _playerCamera = playerCamera;
             _playerCamera.Follow = lookPoint;
             _playerCamera.gameObject.SetActive(true);
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
 
         public override void Spawned()
@@ -33,7 +36,6 @@ namespace Photon
             if (HasInputAuthority) PlayerSpawned?.Invoke(this);
             
             _transform = transform;
-            _rotationSpeed = controller.rotationSpeed;
             _zeroRotation = lookPoint.localRotation;
         }
 
@@ -51,20 +53,21 @@ namespace Photon
                 
                 angleX = data.lookDelta.x;
                 lookRotation = from * Quaternion.AngleAxis(-data.lookDelta.y, Vector3.right);
-                
+                LookRotation = lookRotation;
+
                 if (data.jumped) controller.Jump();
             }
             else
             {
                 direction = MovementDirection;
                 angleX = 0;
-                lookRotation = lookPoint.localRotation;
+                lookRotation = LookRotation;
             }
             
             controller.Move(direction);
             controller.RotateY(angleX);
-            if (Quaternion.Angle(_zeroRotation, lookRotation) < 90f)
-                lookPoint.localRotation = Quaternion.Slerp(from, lookRotation, _rotationSpeed * Runner.DeltaTime);
+            if (Quaternion.Angle(_zeroRotation, lookRotation) < 90f && Quaternion.Angle(from, lookRotation) > .1f)
+                lookPoint.localRotation = Quaternion.Slerp(from, lookRotation, controller.rotationSpeed * Runner.DeltaTime);
         }
 
         public override void Despawned(NetworkRunner runner, bool hasState)
