@@ -78,6 +78,7 @@ namespace Photon
 
             if (collidedGameObject.TryGetComponent<PlayerHealth>(out var health))
             {
+                Debug.Log($"hit player {health.Object.InputAuthority}");
                 health.HitPoints -= (int)_force;
             }
 

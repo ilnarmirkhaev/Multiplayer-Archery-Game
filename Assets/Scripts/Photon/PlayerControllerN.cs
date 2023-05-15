@@ -15,7 +15,7 @@ namespace Photon
         private Transform _transform;
         private Quaternion _zeroRotation;
 
-        public static event Action<SimulationBehaviour> PlayerSpawned;
+        public static event Action<NetworkObject> PlayerSpawned;
 
         public Vector3 MovementDirection { get; set; }
         public Quaternion LookRotation { get; set; }
@@ -33,7 +33,7 @@ namespace Photon
 
         public override void Spawned()
         {
-            if (HasInputAuthority) PlayerSpawned?.Invoke(this);
+            if (HasInputAuthority) PlayerSpawned?.Invoke(Object);
             
             _transform = transform;
             _zeroRotation = lookPoint.localRotation;

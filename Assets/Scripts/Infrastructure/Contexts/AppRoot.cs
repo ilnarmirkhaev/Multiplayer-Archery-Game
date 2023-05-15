@@ -12,14 +12,21 @@ namespace Infrastructure.Contexts
         
         protected override void Configure(IContainerBuilder builder)
         {
-            DontDestroyOnLoad(gameObject);
-
             builder.RegisterComponent(playerCamera);
-            
+            builder.RegisterComponentInHierarchy<HealthDisplay>();
+
             builder.RegisterBuildCallback(resolver =>
             {
-                PlayerControllerN.PlayerSpawned += resolver.Inject;
+                PlayerControllerN.PlayerSpawned += o =>
+                {
+                    foreach (var behaviour in o.NetworkedBehaviours)
+                    {
+                        resolver.Inject(behaviour);
+                    }
+                };
             });
+            
+            DontDestroyOnLoad(gameObject);
         }
     }
 }
