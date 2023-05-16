@@ -26,9 +26,9 @@ namespace Photon
 
         public static void HpChanged(Changed<PlayerHealth> changed)
         {
-            var hp = changed.Behaviour.HitPoints;
-            Debug.Log(hp);
-            changed.Behaviour.Display.UpdateHealth(hp);
+            var behaviour = changed.Behaviour;
+            if (behaviour.HasInputAuthority)
+                changed.Behaviour.Display.UpdateHealth(behaviour.HitPoints);
         }
     }
 }
