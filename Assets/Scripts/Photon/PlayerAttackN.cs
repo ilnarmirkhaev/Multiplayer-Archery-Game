@@ -42,7 +42,6 @@ namespace Photon
         {
             if (!_isCharging || _isReloading) return;
             _currentCharge = Mathf.Clamp(_currentCharge + ChargeMultiplier * Runner.DeltaTime, MinCharge, MaxCharge);
-            Debug.Log(_currentCharge);
         }
 
         private void Fire()
