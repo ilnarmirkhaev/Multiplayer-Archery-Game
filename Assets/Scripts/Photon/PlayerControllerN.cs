@@ -12,6 +12,7 @@ namespace Photon
         [SerializeField] private NetworkCharacterControllerPrototype controller;
         [SerializeField] private Transform lookPoint;
 		[SerializeField] private Animator animator;
+		[SerializeField] private PlayerHealth health;
 
         private CinemachineVirtualCamera _playerCamera;
         private Transform _transform;
@@ -43,6 +44,7 @@ namespace Photon
 
         public override void FixedUpdateNetwork()
         {
+			if (health.HitPoints <= 0) return;
             Vector3 direction;
             Quaternion lookRotation;
             float angleX;

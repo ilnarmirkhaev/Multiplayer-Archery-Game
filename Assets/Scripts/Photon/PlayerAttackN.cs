@@ -52,7 +52,7 @@ namespace Photon
                 return;
             }
 
-            Debug.Log($"Fire power: {_currentCharge}");
+            // Debug.Log($"Fire power: {_currentCharge}");
             Runner.Spawn(
                 arrowPrefab,
                 shootingPoint.position,
